@@ -1,0 +1,34 @@
+#!/bin/sh
+
+target_path=/usr/local/bin
+
+client=$target_path/emacsclient
+filename=$HOME/.emacs.d/einstall
+
+function install {
+    for name in e es ew; do
+        echo "$filename $name"
+        ln -s $filename /usr/local/bin/$name
+    done
+}
+
+function uninstall {
+    for name in e es ew; do
+        rm $target_path/$name
+    done
+}
+
+if [ "$1" == "--uninstall" ]; then
+    uninstall
+else
+    case `basename $0` in
+        einstall) install
+            ;;
+        es) open -a /Applications/Emacs.app "$@"
+            ;;
+        e)  open -a /Applications/Emacs.app "$@"
+            ;;
+        ew) exec $client -a "" "$@"
+            ;;
+    esac
+fi
